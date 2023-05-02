@@ -40,3 +40,7 @@ I could probably get file scope working.
 I could probably get the first run file injected as well so you don't have to `lua -l` everything.
 
 Meh.
+
+
+### Dependencies:
+- https://github.com/thenumbernine/lua-parser
