@@ -3,7 +3,7 @@ local _ENV = setmetatable({}, {__index=_G})	-- 5.2 support
 if setfenv then setfenv(1, _ENV) end		-- 5.1 support
 ]]
 
-local function modifyTree(tree)
+require 'parser.load_xform':insert(function(tree)
 	-- insert local-scope call into each function
 	local function addcbs(x)
 		for k,v in pairs(x) do
@@ -26,23 +26,4 @@ local function modifyTree(tree)
 	end
 
 	addcbs(tree)
-end
-
-local Parser = require 'parser'
-
-table.insert(require 'ext.load'.xforms, function(d, source)
-	local parser
-	local result, code = xpcall(function()
-		parser = Parser()
-		parser:setData(d, source)
-		modifyTree(parser.tree)
-		return tostring(parser.tree)
-	end, function(err)
-		return tostring(source)
-			..' at '..parser.t:getpos()..'\n'
-			..err..'\n'
-			..debug.traceback()
-	end)
-	if not result then error(code) end
-	return code
 end)
